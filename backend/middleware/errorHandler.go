@@ -12,7 +12,9 @@ func ErrorHandlingMiddleware(next http.Handler) http.Handler {
 		defer func() {
 			if err := recover(); err != nil {
 				log.Printf("Panic recovered: %v", err)
-				utils.SendError(w, "Internal server error", http.StatusInternalServerError)
+				log.Printf("Request: %s %s", r.Method, r.URL.Path)
+				
+				utils.SendError(w, fmt.Sprintf("Internal server error: %v", err), http.StatusInternalServerError)
 			}
 		}()
 

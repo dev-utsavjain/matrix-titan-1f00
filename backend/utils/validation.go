@@ -19,5 +19,7 @@ func IsValidUsername(username string) bool {
 }
 
 func SanitizeString(s string) string {
-	return strings.TrimSpace(s)
+	s = strings.TrimSpace(s)
+	s = regexp.MustCompile(`\s+`).ReplaceAllString(s, " ")
+	return s
 }

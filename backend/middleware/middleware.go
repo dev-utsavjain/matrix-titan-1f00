@@ -1,11 +1,14 @@
 package middleware
 
-import "net/http"
+import (
+	"net/http"
+	"time"
+)
 
 func Chain(next http.Handler) http.Handler {
 	return CORSMiddleware(
-		ErrorHandlingMiddleware(
-			LoggingMiddleware(next),
+		LoggingMiddleware(
+			ErrorHandlingMiddleware(next),
 		),
 	)
 }

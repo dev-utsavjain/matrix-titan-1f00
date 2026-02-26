@@ -19,6 +19,6 @@ func SendError(w http.ResponseWriter, message string, statusCode int) {
 	w.WriteHeader(statusCode)
 	json.NewEncoder(w).Encode(map[string]interface{}{
 		"success": false,
-		"message": message,
+		"error":   message,
 	})
 }

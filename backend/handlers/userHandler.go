@@ -1,20 +1,17 @@
 package handlers
 
 import (
+	"net/http"
+
 	"backend/db"
 	"backend/models"
 	"backend/utils"
-	"backend/views"
-	"context"
-	"net/http"
-	"github.com/google/uuid"
 )
 
 func GetUserProfile(w http.ResponseWriter, r *http.Request) {
-	userIDStr := r.Context().Value("user_id").(string)
-	userID, err := uuid.Parse(userIDStr)
-	if err != nil {
-		utils.SendError(w, "Invalid user ID", http.StatusBadRequest)
+	userID := r.Header.Get("X-User-ID")
+	if userID == "" {
+		utils.SendError(w, "Unauthorized", http.StatusUnauthorized)
 		return
 	}
 
@@ -35,16 +32,15 @@ func GetUserProfile(w http.ResponseWriter, r *http.Request) {
 }
 
 func GetUserPosts(w http.ResponseWriter, r *http.Request) {
-	userIDStr := r.Context().Value("user_id").(string)
-	userID, err := uuid.Parse(userIDStr)
-	if err != nil {
-		utils.SendError(w, "Invalid user ID", http.StatusBadRequest)
+	userID := r.Header.Get("X-User-ID")
+	if userID == "" {
+		utils.SendError(w, "Unauthorized", http.StatusUnauthorized)
 		return
 	}
 
 	var posts []models.Post
-	if err := db.DB.Where("author_id = ?", userID).Find(&posts).Error; err != nil {
-		utils.SendError(w, "Failed to fetch posts", http.StatusInternalServerError)
+	if err := db.DB.Preload("Category").Where("author_id = ?", userID).Order("created_at DESC").Find(&posts).Error; err != nil {
+		utils.SendError(w, "Failed to fetch user posts", http.StatusInternalServerError)
 		return
 	}
 
@@ -52,29 +48,28 @@ func GetUserPosts(w http.ResponseWriter, r *http.Request) {
 }
 
 func GetUserStats(w http.ResponseWriter, r *http.Request) {
-	userIDStr := r.Context().Value("user_id").(string)
-	userID, err := uuid.Parse(userIDStr)
-	if err != nil {
-		utils.SendError(w, "Invalid user ID", http.StatusBadRequest)
+	userID := r.Header.Get("X-User-ID")
+	if userID == "" {
+		utils.SendError(w, "Unauthorized", http.StatusUnauthorized)
 		return
 	}
 
 	var totalPosts int64
-	var publishedPosts int64
-	var draftPosts int64
-	var totalViews int64
-
 	db.DB.Model(&models.Post{}).Where("author_id = ?", userID).Count(&totalPosts)
+
+	var publishedPosts int64
 	db.DB.Model(&models.Post{}).Where("author_id = ? AND status = ?", userID, "published").Count(&publishedPosts)
+
+	var draftPosts int64
 	db.DB.Model(&models.Post{}).Where("author_id = ? AND status = ?", userID, "draft").Count(&draftPosts)
+
+	var totalViews int64
 	db.DB.Model(&models.Post{}).Where("author_id = ?", userID).Select("COALESCE(SUM(views), 0)").Scan(&totalViews)
 
-	stats := views.UserStatsResponse{
-		TotalPosts:     totalPosts,
-		PublishedPosts: publishedPosts,
-		DraftPosts:     draftPosts,
-		TotalViews:     totalViews,
-	}
-
-	utils.SendSuccess(w, stats)
+	utils.SendSuccess(w, map[string]interface{}{
+		"totalPosts":     totalPosts,
+		"publishedPosts": publishedPosts,
+		"draftPosts":     draftPosts,
+		"totalViews":     totalViews,
+	})
 }

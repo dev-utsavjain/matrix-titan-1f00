@@ -1,14 +1,18 @@
 package handlers
 
 import (
-	"backend/utils"
 	"net/http"
 	"time"
+
+	"backend/utils"
+	"backend/views"
 )
 
 func HealthCheck(w http.ResponseWriter, r *http.Request) {
-	utils.SendSuccess(w, map[string]interface{}{
-		"message":   "Server is running",
-		"timestamp": time.Now().Format(time.RFC3339),
-	})
+	response := views.HealthResponse{
+		Success:   true,
+		Message:   "Server is running",
+		Timestamp: time.Now(),
+	}
+	utils.SendSuccess(w, response)
 }

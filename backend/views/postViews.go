@@ -1,35 +1,29 @@
 package views
 
+type PostListResponse struct {
+	Posts []PostResponse `json:"posts"`
+	Total int64          `json:"total"`
+	Page  int            `json:"page"`
+	Limit int            `json:"limit"`
+}
+
 type PostResponse struct {
 	ID            string    `json:"id"`
 	Title         string    `json:"title"`
 	Slug          string    `json:"slug"`
-	Excerpt       string    `json:"excerpt,omitempty"`
-	Content       string    `json:"content"`
-	FeaturedImage string    `json:"featuredImage,omitempty"`
-	Status        string    `json:"status"`
-	Featured      bool      `json:"featured"`
-	Views         int       `json:"views"`
+	Excerpt       string    `json:"excerpt"`
+	FeaturedImage string    `json:"featuredImage"`
 	ReadTime      int       `json:"readTime"`
-	AuthorID      string    `json:"authorId"`
-	CategoryID    string    `json:"categoryId,omitempty"`
+	Views         int       `json:"views"`
+	Featured      bool      `json:"featured"`
+	Status        string    `json:"status"`
 	CreatedAt     string    `json:"createdAt"`
-	UpdatedAt     string    `json:"updatedAt"`
-	Author        UserResponse `json:"author,omitempty"`
+	Author        AuthorResponse `json:"author"`
 	Category      CategoryResponse `json:"category,omitempty"`
 }
 
-type UserResponse struct {
+type AuthorResponse struct {
 	ID       string `json:"id"`
 	Username string `json:"username"`
-	Email    string `json:"email"`
-	Avatar   string `json:"avatar,omitempty"`
-	Bio      string `json:"bio,omitempty"`
-}
-
-type CategoryResponse struct {
-	ID          string `json:"id"`
-	Name        string `json:"name"`
-	Slug        string `json:"slug"`
-	Description string `json:"description,omitempty"`
+	Avatar   string `json:"avatar"`
 }

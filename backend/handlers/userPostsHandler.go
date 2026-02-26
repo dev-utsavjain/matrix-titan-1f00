@@ -1,13 +1,14 @@
 package handlers
 
 import (
+	"net/http"
+
 	"backend/db"
 	"backend/models"
 	"backend/utils"
-	"net/http"
 )
 
-func GetCurrentUserPosts(w http.ResponseWriter, r *http.Request) {
+func GetUserPosts(w http.ResponseWriter, r *http.Request) {
 	userID := r.Header.Get("X-User-ID")
 	if userID == "" {
 		utils.SendError(w, "Unauthorized", http.StatusUnauthorized)
@@ -15,8 +16,11 @@ func GetCurrentUserPosts(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var posts []models.Post
-	if err := db.DB.Where("author_id = ?", userID).Find(&posts).Error; err != nil {
-		utils.SendError(w, "Failed to fetch posts", http.StatusInternalServerError)
+	if err := db.DB.Where("author_id = ?", userID).
+		Preload("Category").
+		Order("created_at DESC").
+		Find(&posts).Error; err != nil {
+		utils.SendError(w, "Failed to fetch user posts", http.StatusInternalServerError)
 		return
 	}
 

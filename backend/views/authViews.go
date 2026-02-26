@@ -7,6 +7,18 @@ type SignUpRequest struct {
 }
 
 type LoginRequest struct {
-	Email    string `json:"email"`
+	Username string `json:"username"`
 	Password string `json:"password"`
+}
+
+type AuthResponse struct {
+	ID       string `json:"id"`
+	Username string `json:"username"`
+	Email    string `json:"email"`
+	Avatar   string `json:"avatar"`
+	Bio      string `json:"bio"`
+}
+
+type UsernameCheckResponse struct {
+	Available bool `json:"available"`
 }

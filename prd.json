@@ -1,0 +1,539 @@
+{
+  "project_metadata": {
+    "project_name": "hlo",
+    "project_category": "Blog",
+    "description": "A modern blogging platform where authenticated users can create, edit, and manage their blog posts with a personal dashboard.",
+    "core_purpose": "Enable writers to publish and manage blog content with user authentication",
+    "target_audience": "Writers",
+    "key_features": [
+      "User authentication",
+      "Blog post creation",
+      "Personal dashboard",
+      "Content management",
+      "Responsive design"
+    ]
+  },
+  "frontend": {
+    "pages": [
+      {
+        "page_name": "home",
+        "route": "/",
+        "show_in_nav": true,
+        "nav_order": 1,
+        "purpose": "Display featured blog posts and platform introduction",
+        "sections": [
+          "Hero with platform introduction",
+          "Featured posts carousel",
+          "Recent posts grid",
+          "Call-to-action for signup"
+        ],
+        "content_notes": "Hero section with animated headline 'Welcome to BlogSphere' and subtitle about sharing stories. Featured posts carousel shows 3 latest featured posts with image, title, excerpt. Recent posts grid displays 6 latest posts in card format. Each post card shows title, author, publish date, excerpt, and read time. CTA section encourages visitors to start writing. All posts link to blogPost page with dynamic routing.",
+        "data_needs": [
+          "/api/posts/featured",
+          "/api/posts/recent"
+        ],
+        "is_protected": false
+      },
+      {
+        "page_name": "blogPosts",
+        "route": "/blog",
+        "show_in_nav": true,
+        "nav_order": 2,
+        "purpose": "Display all published blog posts in paginated format",
+        "sections": [
+          "Page header with blog title",
+          "Posts filter bar",
+          "Posts grid/list view",
+          "Pagination controls"
+        ],
+        "content_notes": "Header with 'All Posts' title and blog description. Filter bar includes category dropdown, search input, and sort options (newest, oldest, popular). Posts displayed in responsive grid (3 columns desktop, 2 tablet, 1 mobile). Each post card shows featured image, title, author name, publish date, category badge, excerpt, and read time. Pagination shows 12 posts per page with numbered page links.",
+        "data_needs": [
+          "/api/posts",
+          "/api/categories"
+        ],
+        "is_protected": false
+      },
+      {
+        "page_name": "blogPost",
+        "route": "/blog/:slug",
+        "show_in_nav": false,
+        "nav_order": 0,
+        "purpose": "Display individual blog post with full content",
+        "sections": [
+          "Post header with metadata",
+          "Post content area",
+          "Author bio section",
+          "Related posts"
+        ],
+        "content_notes": "Post header shows title, author name with avatar, publish date, read time, category tags. Content area displays rich text content with proper typography (h1-h6, paragraphs, lists, blockquotes, code blocks). Author bio shows author image, name, bio text, and link to author profile. Related posts section shows 3 posts from same category. Include social sharing buttons and comment section placeholder.",
+        "data_needs": [
+          "/api/posts/:slug",
+          "/api/posts/related/:id"
+        ],
+        "is_protected": false
+      },
+      {
+        "page_name": "login",
+        "route": "/login",
+        "show_in_nav": false,
+        "nav_order": 0,
+        "purpose": "Authenticate existing users",
+        "sections": [
+          "Login form container",
+          "Social login options",
+          "Signup redirect link"
+        ],
+        "content_notes": "Centered login form with email and password fields. Form includes validation feedback and remember me checkbox. Social login buttons for Google and GitHub. Link to signup page for new users. Forgot password link. Form should handle errors gracefully with clear messages.",
+        "data_needs": [
+          "/api/auth/login"
+        ],
+        "is_protected": false
+      },
+      {
+        "page_name": "signup",
+        "route": "/signup",
+        "show_in_nav": false,
+        "nav_order": 0,
+        "purpose": "Register new user accounts",
+        "sections": [
+          "Signup form container",
+          "Terms acceptance",
+          "Login redirect link"
+        ],
+        "content_notes": "Registration form with username, email, password, and confirm password fields. Real-time validation for username availability and password strength. Checkbox for terms of service and privacy policy acceptance. Link to login page for existing users. Success redirect to login after registration.",
+        "data_needs": [
+          "/api/auth/signup",
+          "/api/auth/check-username"
+        ],
+        "is_protected": false
+      },
+      {
+        "page_name": "dashboard",
+        "route": "/dashboard",
+        "show_in_nav": true,
+        "nav_order": 3,
+        "purpose": "User dashboard for managing blog posts and profile",
+        "sections": [
+          "Dashboard header with user stats",
+          "Posts management table",
+          "Quick actions panel",
+          "Recent activity feed"
+        ],
+        "content_notes": "Header shows welcome message with user name and avatar. Stats cards display total posts, total views, comments received, and account age. Posts table shows user's posts with columns for title, status (draft/published), views, publish date, and actions (edit, delete, view). Quick actions include 'New Post' button and 'Edit Profile' link. Activity feed shows recent post views and comments.",
+        "data_needs": [
+          "/api/users/profile",
+          "/api/users/posts",
+          "/api/users/stats"
+        ],
+        "is_protected": true
+      }
+    ],
+    "navigation": {
+      "type": "header",
+      "position": "sticky",
+      "style": "horizontal",
+      "has_logo": true,
+      "has_search": true,
+      "extra_items": [
+        "Login",
+        "Sign Up",
+        "Dashboard"
+      ]
+    },
+    "theme": {
+      "design_dna": "GLASSMORPHISM",
+      "color_scheme": "light",
+      "primary_color": "#3B82F6",
+      "secondary_color": "#8B5CF6",
+      "accent_color": "#EC4899",
+      "font_family": "Inter",
+      "font_type": "sans",
+      "border_radius": "lg",
+      "shadow_style": "soft",
+      "animation_style": "moderate",
+      "interaction_style": "subtle"
+    },
+    "components": [
+      {
+        "component_name": "postCard",
+        "type": "shared",
+        "used_on": [
+          "home",
+          "blogPosts"
+        ],
+        "purpose": "Display blog post preview in card format",
+        "props": [
+          "title",
+          "excerpt",
+          "image",
+          "author",
+          "date",
+          "readTime",
+          "slug"
+        ]
+      },
+      {
+        "component_name": "authorBio",
+        "type": "shared",
+        "used_on": [
+          "blogPost"
+        ],
+        "purpose": "Display author information with avatar and bio",
+        "props": [
+          "name",
+          "bio",
+          "avatar",
+          "postCount"
+        ]
+      },
+      {
+        "component_name": "statsCard",
+        "type": "page-specific",
+        "used_on": [
+          "dashboard"
+        ],
+        "purpose": "Display user statistics in card format",
+        "props": [
+          "title",
+          "value",
+          "icon",
+          "change"
+        ]
+      }
+    ],
+    "layout": {
+      "has_header": true,
+      "has_footer": true,
+      "has_sidebar": false,
+      "max_width": "container",
+      "spacing": "normal",
+      "footer_links": [
+        "About",
+        "Privacy",
+        "Terms",
+        "Contact",
+        "Write for Us"
+      ]
+    }
+  },
+  "backend": {
+    "requires_backend": true,
+    "apis": [
+      {
+        "endpoint": "/api/posts",
+        "method": "GET",
+        "purpose": "Get all published posts with pagination and filtering",
+        "request_body": {},
+        "response": {
+          "limit": "number",
+          "page": "number",
+          "posts": "array of post objects",
+          "total": "number"
+        },
+        "auth": false,
+        "used_by": [
+          "blogPosts"
+        ]
+      },
+      {
+        "endpoint": "/api/posts/featured",
+        "method": "GET",
+        "purpose": "Get featured posts for homepage",
+        "request_body": {},
+        "response": {
+          "posts": "array of featured post objects"
+        },
+        "auth": false,
+        "used_by": [
+          "home"
+        ]
+      },
+      {
+        "endpoint": "/api/posts/recent",
+        "method": "GET",
+        "purpose": "Get recent posts for homepage",
+        "request_body": {},
+        "response": {
+          "posts": "array of recent post objects"
+        },
+        "auth": false,
+        "used_by": [
+          "home"
+        ]
+      },
+      {
+        "endpoint": "/api/posts/:slug",
+        "method": "GET",
+        "purpose": "Get single post by slug",
+        "request_body": {},
+        "response": {
+          "author": "author object",
+          "post": "post object",
+          "tags": "array of strings"
+        },
+        "auth": false,
+        "used_by": [
+          "blogPost"
+        ]
+      },
+      {
+        "endpoint": "/api/posts/related/:id",
+        "method": "GET",
+        "purpose": "Get related posts for a blog post",
+        "request_body": {},
+        "response": {
+          "posts": "array of related post objects"
+        },
+        "auth": false,
+        "used_by": [
+          "blogPost"
+        ]
+      },
+      {
+        "endpoint": "/api/categories",
+        "method": "GET",
+        "purpose": "Get all blog categories",
+        "request_body": {},
+        "response": {
+          "categories": "array of category objects"
+        },
+        "auth": false,
+        "used_by": [
+          "blogPosts"
+        ]
+      },
+      {
+        "endpoint": "/api/auth/signup",
+        "method": "POST",
+        "purpose": "Register new user",
+        "request_body": {
+          "email": "string",
+          "password": "string",
+          "username": "string"
+        },
+        "response": {
+          "message": "string",
+          "userId": "string"
+        },
+        "auth": false,
+        "used_by": [
+          "signup"
+        ]
+      },
+      {
+        "endpoint": "/api/auth/login",
+        "method": "POST",
+        "purpose": "Authenticate user",
+        "request_body": {
+          "email": "string",
+          "password": "string"
+        },
+        "response": {
+          "token": "string",
+          "user": "user object"
+        },
+        "auth": false,
+        "used_by": [
+          "login"
+        ]
+      },
+      {
+        "endpoint": "/api/auth/check-username",
+        "method": "GET",
+        "purpose": "Check username availability",
+        "request_body": {},
+        "response": {
+          "available": "boolean"
+        },
+        "auth": false,
+        "used_by": [
+          "signup"
+        ]
+      },
+      {
+        "endpoint": "/api/users/profile",
+        "method": "GET",
+        "purpose": "Get current user profile",
+        "request_body": {},
+        "response": {
+          "user": "user object"
+        },
+        "auth": true,
+        "used_by": [
+          "dashboard"
+        ]
+      },
+      {
+        "endpoint": "/api/users/posts",
+        "method": "GET",
+        "purpose": "Get current user's posts",
+        "request_body": {},
+        "response": {
+          "posts": "array of post objects"
+        },
+        "auth": true,
+        "used_by": [
+          "dashboard"
+        ]
+      },
+      {
+        "endpoint": "/api/users/stats",
+        "method": "GET",
+        "purpose": "Get user dashboard statistics",
+        "request_body": {},
+        "response": {
+          "accountAge": "number",
+          "totalComments": "number",
+          "totalPosts": "number",
+          "totalViews": "number"
+        },
+        "auth": true,
+        "used_by": [
+          "dashboard"
+        ]
+      }
+    ],
+    "database": {
+      "models": [
+        {
+          "model_name": "user",
+          "fields": {
+            "avatar": "string url",
+            "bio": "text",
+            "createdAt": "timestamp",
+            "email": "string unique",
+            "id": "uuid primary key",
+            "password": "string hashed",
+            "updatedAt": "timestamp",
+            "username": "string unique"
+          },
+          "relationships": [
+            "User hasMany Post"
+          ],
+          "indexes": [
+            "username",
+            "email"
+          ]
+        },
+        {
+          "model_name": "post",
+          "fields": {
+            "authorId": "uuid foreign key",
+            "categoryId": "uuid foreign key",
+            "content": "text",
+            "createdAt": "timestamp",
+            "excerpt": "string",
+            "featured": "boolean default false",
+            "featuredImage": "string url",
+            "id": "uuid primary key",
+            "readTime": "integer",
+            "slug": "string unique",
+            "status": "enum(draft,published)",
+            "title": "string",
+            "updatedAt": "timestamp",
+            "views": "integer default 0"
+          },
+          "relationships": [
+            "Post belongsTo User",
+            "Post belongsTo Category",
+            "Post hasMany Comment"
+          ],
+          "indexes": [
+            "slug",
+            "authorId",
+            "categoryId",
+            "status",
+            "featured"
+          ]
+        },
+        {
+          "model_name": "category",
+          "fields": {
+            "createdAt": "timestamp",
+            "description": "text",
+            "id": "uuid primary key",
+            "name": "string",
+            "slug": "string unique"
+          },
+          "relationships": [
+            "Category hasMany Post"
+          ],
+          "indexes": [
+            "slug"
+          ]
+        },
+        {
+          "model_name": "comment",
+          "fields": {
+            "authorId": "uuid foreign key",
+            "content": "text",
+            "createdAt": "timestamp",
+            "id": "uuid primary key",
+            "postId": "uuid foreign key"
+          },
+          "relationships": [
+            "Comment belongsTo Post",
+            "Comment belongsTo User"
+          ],
+          "indexes": [
+            "postId",
+            "authorId"
+          ]
+        }
+      ]
+    },
+    "authentication": {
+      "required": true,
+      "type": "jwt",
+      "providers": [
+        "email"
+      ],
+      "protected_apis": [
+        "/api/users/profile",
+        "/api/users/posts",
+        "/api/users/stats"
+      ]
+    },
+    "external_apis": [],
+    "file_storage": {
+      "required": true,
+      "types": [
+        "images"
+      ],
+      "max_size": "5MB"
+    }
+  },
+  "technical_specs": {
+    "frontend": {
+      "framework": "React",
+      "routing": "react-router-dom",
+      "styling": "Tailwind CSS v4",
+      "state_management": "React Context",
+      "animation": "Framer Motion",
+      "dependencies": [
+        "react@^19.0.0",
+        "react-dom@^19.0.0",
+        "react-router-dom@^7.0.0",
+        "tailwindcss@^4.0.0",
+        "@tailwindcss/vite",
+        "framer-motion",
+        "lucide-react",
+        "clsx",
+        "tailwind-merge"
+      ]
+    },
+    "backend": {
+      "framework": "Standard Library",
+      "database": "PostgreSQL",
+      "orm": "GORM",
+      "auth": "JWT",
+      "dependencies": [
+        "github.com/gorilla/mux",
+        "github.com/golang-jwt/jwt/v5",
+        "gorm.io/gorm",
+        "gorm.io/driver/postgres",
+        "golang.org/x/crypto/bcrypt"
+      ]
+    }
+  }
+}

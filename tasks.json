@@ -1,0 +1,332 @@
+{
+  "version": "1.0",
+  "generated_at": "2026-02-26T04:22:07.77318719Z",
+  "total_tasks": 26,
+  "completed_tasks": 1,
+  "failed_tasks": 0,
+  "status": "in_progress",
+  "tasks": [
+    {
+      "id": "task_001",
+      "category": "database",
+      "type": "model",
+      "title": "User Model",
+      "description": "Define the User GORM model with fields: id (uuid PK), username (unique string), email (unique string), password (hashed string), avatar (string URL), bio (text), createdAt and updatedAt timestamps. Add indexes on username and email. Establish has-many relationship with Post model.",
+      "status": "pending",
+      "dependencies": [],
+      "file_path": "backend/models/user.go"
+    },
+    {
+      "id": "task_002",
+      "category": "database",
+      "type": "model",
+      "title": "Post Model",
+      "description": "Define the Post GORM model with fields: id (uuid PK), title (string), slug (unique string), excerpt (string), content (text), featuredImage (string URL), readTime (integer), status (enum: draft/published), featured (boolean default false), views (integer default 0), authorId (uuid FK), categoryId (uuid FK), createdAt and updatedAt timestamps. Add indexes on slug, authorId, categoryId, status, and featured. Establish belongs-to relationships with User and Category models, and has-many relationship with Comment model.",
+      "status": "pending",
+      "dependencies": [
+        "task_001"
+      ],
+      "file_path": "backend/models/post.go"
+    },
+    {
+      "id": "task_003",
+      "category": "database",
+      "type": "model",
+      "title": "Category Model",
+      "description": "Define the Category GORM model with fields: id (uuid PK), name (string), slug (unique string), description (text), createdAt timestamp. Add index on slug. Establish has-many relationship with Post model.",
+      "status": "pending",
+      "dependencies": [],
+      "file_path": "backend/models/category.go"
+    },
+    {
+      "id": "task_004",
+      "category": "database",
+      "type": "model",
+      "title": "Comment Model",
+      "description": "Define the Comment GORM model with fields: id (uuid PK), content (text), postId (uuid FK), authorId (uuid FK), createdAt timestamp. Add indexes on postId and authorId. Establish belongs-to relationships with Post and User models.",
+      "status": "pending",
+      "dependencies": [
+        "task_001",
+        "task_002"
+      ],
+      "file_path": "backend/models/comment.go"
+    },
+    {
+      "id": "task_005",
+      "category": "backend",
+      "type": "api",
+      "title": "GET /api/posts",
+      "description": "Implement GET /api/posts endpoint to retrieve all published posts with pagination and filtering. Accept query parameters: page, limit, category, search, sort. Return JSON with limit, page, posts array, and total count. No authentication required.",
+      "status": "pending",
+      "dependencies": [
+        "task_002"
+      ],
+      "file_path": "backend/routes/posts.go"
+    },
+    {
+      "id": "task_006",
+      "category": "backend",
+      "type": "api",
+      "title": "GET /api/posts/featured",
+      "description": "Implement GET /api/posts/featured endpoint to retrieve featured posts for homepage. Return JSON with posts array filtered by featured=true, ordered by createdAt descending, limited to 3 posts. No authentication required.",
+      "status": "pending",
+      "dependencies": [
+        "task_002"
+      ],
+      "file_path": "backend/routes/posts.go"
+    },
+    {
+      "id": "task_007",
+      "category": "backend",
+      "type": "api",
+      "title": "GET /api/posts/recent",
+      "description": "Implement GET /api/posts/recent endpoint to retrieve recent posts for homepage. Return JSON with posts array ordered by createdAt descending, limited to 6 posts. No authentication required.",
+      "status": "pending",
+      "dependencies": [
+        "task_002"
+      ],
+      "file_path": "backend/routes/posts.go"
+    },
+    {
+      "id": "task_008",
+      "category": "backend",
+      "type": "api",
+      "title": "GET /api/posts/:slug",
+      "description": "Implement GET /api/posts/:slug endpoint to retrieve single post by slug. Return JSON with post object, author object, and tags array. Include view count increment logic. No authentication required.",
+      "status": "pending",
+      "dependencies": [
+        "task_002"
+      ],
+      "file_path": "backend/routes/posts.go"
+    },
+    {
+      "id": "task_009",
+      "category": "backend",
+      "type": "api",
+      "title": "GET /api/posts/related/:id",
+      "description": "Implement GET /api/posts/related/:id endpoint to retrieve related posts for a blog post. Return JSON with posts array from same category, excluding current post, limited to 3 posts. No authentication required.",
+      "status": "pending",
+      "dependencies": [
+        "task_002"
+      ],
+      "file_path": "backend/routes/posts.go"
+    },
+    {
+      "id": "task_010",
+      "category": "backend",
+      "type": "api",
+      "title": "GET /api/categories",
+      "description": "Implement GET /api/categories endpoint to retrieve all blog categories. Return JSON with categories array. No authentication required.",
+      "status": "pending",
+      "dependencies": [
+        "task_003"
+      ],
+      "file_path": "backend/routes/categories.go"
+    },
+    {
+      "id": "task_011",
+      "category": "backend",
+      "type": "api",
+      "title": "POST /api/auth/signup",
+      "description": "Implement POST /api/auth/signup endpoint to register new user. Accept JSON with email, password, and username. Hash password with bcrypt. Return JSON with message and userId. No authentication required.",
+      "status": "pending",
+      "dependencies": [
+        "task_001"
+      ],
+      "file_path": "backend/routes/auth.go"
+    },
+    {
+      "id": "task_012",
+      "category": "backend",
+      "type": "api",
+      "title": "POST /api/auth/login",
+      "description": "Implement POST /api/auth/login endpoint to authenticate user. Accept JSON with email and password. Verify password hash. Return JSON with JWT token and user object. No authentication required.",
+      "status": "pending",
+      "dependencies": [
+        "task_001"
+      ],
+      "file_path": "backend/routes/auth.go"
+    },
+    {
+      "id": "task_013",
+      "category": "backend",
+      "type": "api",
+      "title": "GET /api/auth/check-username",
+      "description": "Implement GET /api/auth/check-username endpoint to check username availability. Accept username query parameter. Return JSON with available boolean. No authentication required.",
+      "status": "pending",
+      "dependencies": [
+        "task_001"
+      ],
+      "file_path": "backend/routes/auth.go"
+    },
+    {
+      "id": "task_014",
+      "category": "backend",
+      "type": "api",
+      "title": "GET /api/users/profile",
+      "description": "Implement GET /api/users/profile endpoint to retrieve current user profile. Extract user ID from JWT token. Return JSON with user object. Authentication required.",
+      "status": "pending",
+      "dependencies": [
+        "task_001"
+      ],
+      "file_path": "backend/routes/users.go"
+    },
+    {
+      "id": "task_015",
+      "category": "backend",
+      "type": "api",
+      "title": "GET /api/users/posts",
+      "description": "Implement GET /api/users/posts endpoint to retrieve current user's posts. Extract user ID from JWT token. Return JSON with posts array. Authentication required.",
+      "status": "pending",
+      "dependencies": [
+        "task_002"
+      ],
+      "file_path": "backend/routes/users.go"
+    },
+    {
+      "id": "task_016",
+      "category": "backend",
+      "type": "api",
+      "title": "GET /api/users/stats",
+      "description": "Implement GET /api/users/stats endpoint to retrieve user dashboard statistics. Extract user ID from JWT token. Return JSON with totalPosts, totalViews, totalComments, and accountAge. Authentication required.",
+      "status": "pending",
+      "dependencies": [
+        "task_001",
+        "task_002",
+        "task_004"
+      ],
+      "file_path": "backend/routes/users.go"
+    },
+    {
+      "id": "task_017",
+      "category": "frontend",
+      "type": "component",
+      "title": "PostCard Component",
+      "description": "Create reusable PostCard component with glassmorphism styling using Tailwind CSS. Accept props: title, excerpt, image, author, date, readTime, slug. Display card with featured image, title, author name with avatar, publish date, read time, and excerpt. Implement hover effects with Framer Motion. Link to /blog/:slug route.",
+      "status": "pending",
+      "dependencies": [],
+      "file_path": "frontend/src/components/postCard.jsx"
+    },
+    {
+      "id": "task_018",
+      "category": "frontend",
+      "type": "component",
+      "title": "AuthorBio Component",
+      "description": "Create reusable AuthorBio component with glassmorphism styling. Accept props: name, bio, avatar, postCount. Display author avatar, name, bio text, and post count. Use Inter font family with subtle animations.",
+      "status": "pending",
+      "dependencies": [],
+      "file_path": "frontend/src/components/authorBio.jsx"
+    },
+    {
+      "id": "task_019",
+      "category": "frontend",
+      "type": "component",
+      "title": "StatsCard Component",
+      "description": "Create reusable StatsCard component for dashboard statistics. Accept props: title, value, icon, change. Display card with icon, title, value, and optional change indicator. Apply glassmorphism design with soft shadows and moderate animations.",
+      "status": "pending",
+      "dependencies": [],
+      "file_path": "frontend/src/components/statsCard.jsx"
+    },
+    {
+      "id": "task_020",
+      "category": "frontend",
+      "type": "page",
+      "title": "Home Page",
+      "description": "Create Home page component at route '/'. Include hero section with animated headline 'Welcome to BlogSphere' and subtitle. Implement featured posts carousel using PostCard component, fetching from /api/posts/featured. Display recent posts grid (6 posts) from /api/posts/recent. Add call-to-action section for signup. Use glassmorphism styling with primary color #3B82F6 and secondary #8B5CF6.",
+      "status": "pending",
+      "dependencies": [
+        "task_017",
+        "task_005",
+        "task_006"
+      ],
+      "file_path": "frontend/src/pages/home.jsx"
+    },
+    {
+      "id": "task_021",
+      "category": "frontend",
+      "type": "page",
+      "title": "BlogPosts Page",
+      "description": "Create BlogPosts page component at route '/blog'. Display page header with 'All Posts' title. Implement filter bar with category dropdown (from /api/categories), search input, and sort options (newest, oldest, popular). Show posts in responsive grid using PostCard component, fetching from /api/posts with pagination. Implement pagination controls for 12 posts per page. Apply glassmorphism styling.",
+      "status": "pending",
+      "dependencies": [
+        "task_017",
+        "task_005",
+        "task_010"
+      ],
+      "file_path": "frontend/src/pages/blogPosts.jsx"
+    },
+    {
+      "id": "task_022",
+      "category": "frontend",
+      "type": "page",
+      "title": "BlogPost Page",
+      "description": "Create BlogPost page component at dynamic route '/blog/:slug'. Fetch post data from /api/posts/:slug. Display post header with title, author info, publish date, read time, and category tags. Render rich text content with proper typography. Include AuthorBio component and related posts section (from /api/posts/related/:id). Add social sharing buttons and comment placeholder. Use glassmorphism styling with soft shadows.",
+      "status": "pending",
+      "dependencies": [
+        "task_018",
+        "task_008",
+        "task_009"
+      ],
+      "file_path": "frontend/src/pages/blogPost.jsx"
+    },
+    {
+      "id": "task_023",
+      "category": "frontend",
+      "type": "page",
+      "title": "Login Page",
+      "description": "Create Login page component at route '/login'. Implement centered login form with email and password fields, validation feedback, and remember me checkbox. Add social login buttons for Google and GitHub. Include links for signup and forgot password. Handle form submission to /api/auth/login with error messages. Use glassmorphism form styling with subtle animations.",
+      "status": "pending",
+      "dependencies": [
+        "task_012"
+      ],
+      "file_path": "frontend/src/pages/login.jsx"
+    },
+    {
+      "id": "task_024",
+      "category": "frontend",
+      "type": "page",
+      "title": "Signup Page",
+      "description": "Create Signup page component at route '/signup'. Implement registration form with username, email, password, and confirm password fields. Add real-time username availability check via /api/auth/check-username and password strength indicator. Include terms acceptance checkbox and link to login page. Handle form submission to /api/auth/signup with success redirect to login. Apply glassmorphism styling.",
+      "status": "pending",
+      "dependencies": [
+        "task_011",
+        "task_013"
+      ],
+      "file_path": "frontend/src/pages/signup.jsx"
+    },
+    {
+      "id": "task_025",
+      "category": "frontend",
+      "type": "page",
+      "title": "Dashboard Page",
+      "description": "Create Dashboard page component at protected route '/dashboard'. Display welcome message with user name and avatar from /api/users/profile. Show stats cards (total posts, views, comments, account age) using StatsCard component from /api/users/stats. Implement posts management table with user's posts from /api/users/posts, including edit, delete, view actions. Add quick actions panel and recent activity feed. Use glassmorphism styling with accent color #EC4899.",
+      "status": "pending",
+      "dependencies": [
+        "task_019",
+        "task_014",
+        "task_015",
+        "task_016"
+      ],
+      "file_path": "frontend/src/pages/dashboard.jsx"
+    },
+    {
+      "id": "task_026",
+      "category": "frontend",
+      "type": "page",
+      "title": "App Component",
+      "description": "Create main App.jsx component with React Router setup. Define routes: '/' (Home), '/blog' (BlogPosts), '/blog/:slug' (BlogPost), '/login' (Login), '/signup' (Signup), '/dashboard' (Dashboard). Implement protected route logic for dashboard. Include sticky header navigation with logo, search, and auth links. Apply global glassmorphism theme with Inter font, primary #3B82F6, secondary #8B5CF6, accent #EC4899, soft shadows, and moderate animations. Backend APIs: /api/posts, /api/posts/featured, /api/posts/recent, /api/posts/:slug, /api/posts/related/:id, /api/categories, /api/auth/signup, /api/auth/login, /api/auth/check-username, /api/users/profile, /api/users/posts, /api/users/stats. Database models: User, Post, Category, Comment.",
+      "status": "completed",
+      "dependencies": [
+        "task_020",
+        "task_021",
+        "task_022",
+        "task_023",
+        "task_024",
+        "task_025"
+      ],
+      "file_path": "frontend/src/App.jsx",
+      "started_at": "2026-02-26T04:29:33.408515893Z",
+      "completed_at": "2026-02-26T04:29:40.154570652Z"
+    }
+  ]
+}

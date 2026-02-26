@@ -2,19 +2,15 @@ package models
 
 import (
 	"time"
-	"gorm.io/gorm"
+	"github.com/google/uuid"
 )
 
 type Category struct {
-	ID          string         `gorm:"type:uuid;primaryKey" json:"id"`
-	Name        string         `gorm:"type:varchar(255);not null" json:"name"`
-	Slug        string         `gorm:"type:varchar(255);unique;not null" json:"slug"`
-	Description string         `gorm:"type:text" json:"description"`
-	CreatedAt   time.Time      `json:"createdAt"`
-	UpdatedAt   time.Time      `json:"updatedAt"`
-	DeletedAt   gorm.DeletedAt `gorm:"index" json:"-"`
-	
-	Posts []Post `gorm:"foreignKey:CategoryID" json:"posts,omitempty"`
+	ID          uuid.UUID `gorm:"type:uuid;primaryKey;default:gen_random_uuid()" json:"id"`
+	Name        string    `gorm:"type:varchar(255);not null" json:"name"`
+	Slug        string    `gorm:"type:varchar(255);unique;not null" json:"slug"`
+	Description string    `gorm:"type:text" json:"description"`
+	CreatedAt   time.Time `gorm:"autoCreateTime" json:"createdAt"`
 }
 
 func (Category) TableName() string {

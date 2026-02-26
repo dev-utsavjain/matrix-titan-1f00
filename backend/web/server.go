@@ -20,7 +20,6 @@ func StartServer() {
 	db.InitDB()
 
 	server := createServer()
-
 	runServer(server)
 }
 
@@ -48,26 +47,27 @@ func createServer() *http.Server {
 }
 
 func runServer(server *http.Server) {
-	sigChan := make(chan os.Signal, 1)
-	signal.Notify(sigChan, os.Interrupt, syscall.SIGTERM)
-
 	go func() {
-		log.Printf("Server starting on port %s", server.Addr)
+		log.Printf("Server starting on %s", server.Addr)
 		if err := server.ListenAndServe(); err != nil && err != http.ErrServerClosed {
 			log.Fatalf("Server failed to start: %v", err)
 		}
 	}()
 
-	<-sigChan
+	quit := make(chan os.Signal, 1)
+	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
+	<-quit
+
 	log.Println("Shutting down server...")
 
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
 
 	if err := server.Shutdown(ctx); err != nil {
-		log.Fatalf("Server shutdown failed: %v", err)
+		log.Fatalf("Server forced to shutdown: %v", err)
 	}
-	log.Println("Server shutdown complete")
+
+	log.Println("Server exited")
 }
 
 func spaHandler(w http.ResponseWriter, r *http.Request) {

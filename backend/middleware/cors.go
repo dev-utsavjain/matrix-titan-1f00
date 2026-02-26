@@ -13,23 +13,16 @@ func CORSMiddleware(next http.Handler) http.Handler {
 			allowedOrigins = "*"
 		}
 
-		if allowedOrigins == "*" {
-			w.Header().Set("Access-Control-Allow-Origin", "*")
-		} else {
-			origin := r.Header.Get("Origin")
-			for _, o := range strings.Split(allowedOrigins, ",") {
-				if strings.TrimSpace(o) == origin {
-					w.Header().Set("Access-Control-Allow-Origin", origin)
-					break
-				}
-			}
+		origin := r.Header.Get("Origin")
+		if allowedOrigins == "*" || strings.Contains(allowedOrigins, origin) {
+			w.Header().Set("Access-Control-Allow-Origin", origin)
 		}
 
 		w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
 		w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
-		w.Header().Set("Access-Control-Max-Age", "86400")
+		w.Header().Set("Access-Control-Allow-Credentials", "true")
 
-		if r.Method == "OPTIONS" {
+		if r.Method == http.MethodOptions {
 			w.WriteHeader(http.StatusOK)
 			return
 		}

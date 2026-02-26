@@ -13,5 +13,6 @@ func GetCategories(w http.ResponseWriter, r *http.Request) {
 		utils.SendError(w, "Failed to fetch categories", http.StatusInternalServerError)
 		return
 	}
+
 	utils.SendSuccess(w, categories)
 }

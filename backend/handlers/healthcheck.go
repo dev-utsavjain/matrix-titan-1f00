@@ -7,9 +7,8 @@ import (
 )
 
 func HealthCheck(w http.ResponseWriter, r *http.Request) {
-	response := map[string]interface{}{
+	utils.SendSuccess(w, map[string]interface{}{
 		"message":   "Server is running",
 		"timestamp": time.Now().Format(time.RFC3339),
-	}
-	utils.SendSuccess(w, response)
+	})
 }

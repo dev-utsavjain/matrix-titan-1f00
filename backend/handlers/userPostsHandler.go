@@ -15,10 +15,8 @@ func GetCurrentUserPosts(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var posts []models.Post
-	if err := db.DB.Where("author_id = ? AND status = ?", userID, "published").
-		Order("created_at DESC").
-		Find(&posts).Error; err != nil {
-		utils.SendError(w, "Failed to fetch user posts", http.StatusInternalServerError)
+	if err := db.DB.Where("author_id = ?", userID).Find(&posts).Error; err != nil {
+		utils.SendError(w, "Failed to fetch posts", http.StatusInternalServerError)
 		return
 	}
 

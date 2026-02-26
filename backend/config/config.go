@@ -1,23 +1,27 @@
 package config
 
-import (
-	"os"
-)
+import "os"
 
-// GetPort returns the port from environment or default
-func GetPort() string {
-	port := os.Getenv("PORT")
-	if port == "" {
-		port = "8080"
-	}
-	return port
+type Config struct {
+	DBHost        string
+	DBPort        string
+	DBUser        string
+	DBPassword    string
+	DBName        string
+	DBSchema      string
+	Port          string
+	AllowedOrigins string
 }
 
-// GetAllowedOrigins returns allowed CORS origins
-func GetAllowedOrigins() string {
-	origins := os.Getenv("ALLOWED_ORIGINS")
-	if origins == "" {
-		return "*"
+func Load() *Config {
+	return &Config{
+		DBHost:        os.Getenv("DB_HOST"),
+		DBPort:        os.Getenv("DB_PORT"),
+		DBUser:        os.Getenv("DB_USER"),
+		DBPassword:    os.Getenv("DB_PASSWORD"),
+		DBName:        os.Getenv("DB_NAME"),
+		DBSchema:      os.Getenv("DB_SCHEMA"),
+		Port:          os.Getenv("PORT"),
+		AllowedOrigins: os.Getenv("ALLOWED_ORIGINS"),
 	}
-	return origins
 }

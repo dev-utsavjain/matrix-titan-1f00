@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"net/http"
+
 	"backend/db"
 	"backend/models"
 	"backend/utils"
@@ -11,8 +12,11 @@ import (
 func GetFeaturedPosts(w http.ResponseWriter, r *http.Request) {
 	var posts []models.Post
 
-	// Get featured posts, limit to 6 for homepage
-	if err := db.DB.Where("featured = ? AND status = ?", true, "published").
+	if err := db.DB.
+		Model(&models.Post{}).
+		Where("status = ? AND featured = ?", "published", true).
+		Preload("Author").
+		Preload("Category").
 		Order("created_at DESC").
 		Limit(6).
 		Find(&posts).Error; err != nil {

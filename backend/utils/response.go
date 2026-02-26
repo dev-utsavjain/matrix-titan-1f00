@@ -5,7 +5,6 @@ import (
 	"net/http"
 )
 
-// SendSuccess sends a successful JSON response
 func SendSuccess(w http.ResponseWriter, data interface{}) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
@@ -15,7 +14,6 @@ func SendSuccess(w http.ResponseWriter, data interface{}) {
 	})
 }
 
-// SendError sends an error JSON response
 func SendError(w http.ResponseWriter, message string, statusCode int) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(statusCode)

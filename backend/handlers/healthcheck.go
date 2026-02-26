@@ -1,18 +1,15 @@
 package handlers
 
 import (
-	"encoding/json"
+	"backend/utils"
 	"net/http"
 	"time"
 )
 
-// HealthCheck returns server health status
 func HealthCheck(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusOK)
-	json.NewEncoder(w).Encode(map[string]interface{}{
-		"success":   true,
+	response := map[string]interface{}{
 		"message":   "Server is running",
 		"timestamp": time.Now().Format(time.RFC3339),
-	})
+	}
+	utils.SendSuccess(w, response)
 }

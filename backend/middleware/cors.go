@@ -6,23 +6,19 @@ import (
 	"strings"
 )
 
-// CORSMiddleware handles cross-origin requests
 func CORSMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		// Get allowed origins from environment
 		allowedOrigins := os.Getenv("ALLOWED_ORIGINS")
 		if allowedOrigins == "" {
 			allowedOrigins = "*"
 		}
 
-		// Set CORS headers
 		if allowedOrigins == "*" {
 			w.Header().Set("Access-Control-Allow-Origin", "*")
 		} else {
 			origin := r.Header.Get("Origin")
-			origins := strings.Split(allowedOrigins, ",")
-			for _, allowed := range origins {
-				if strings.TrimSpace(allowed) == origin {
+			for _, o := range strings.Split(allowedOrigins, ",") {
+				if strings.TrimSpace(o) == origin {
 					w.Header().Set("Access-Control-Allow-Origin", origin)
 					break
 				}
@@ -33,7 +29,6 @@ func CORSMiddleware(next http.Handler) http.Handler {
 		w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
 		w.Header().Set("Access-Control-Max-Age", "86400")
 
-		// Handle preflight requests
 		if r.Method == "OPTIONS" {
 			w.WriteHeader(http.StatusOK)
 			return

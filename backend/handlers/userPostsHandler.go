@@ -1,24 +1,21 @@
 package handlers
 
 import (
-	"net/http"
-
 	"backend/db"
 	"backend/models"
 	"backend/utils"
+	"net/http"
 )
 
-// GetUserPosts returns posts created by the current user
-func GetUserPosts(w http.ResponseWriter, r *http.Request) {
-	// TODO: Get user ID from authentication context
-	// For now, we'll use a placeholder user ID
-	userID := "placeholder-user-id"
+func GetCurrentUserPosts(w http.ResponseWriter, r *http.Request) {
+	userID := r.Header.Get("X-User-ID")
+	if userID == "" {
+		utils.SendError(w, "Unauthorized", http.StatusUnauthorized)
+		return
+	}
 
 	var posts []models.Post
-	if err := db.DB.
-		Model(&models.Post{}).
-		Where("author_id = ?", userID).
-		Preload("Category").
+	if err := db.DB.Where("author_id = ? AND status = ?", userID, "published").
 		Order("created_at DESC").
 		Find(&posts).Error; err != nil {
 		utils.SendError(w, "Failed to fetch user posts", http.StatusInternalServerError)
